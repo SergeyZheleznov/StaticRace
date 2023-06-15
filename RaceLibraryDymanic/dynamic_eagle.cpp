@@ -13,7 +13,7 @@ namespace RaceLibraryDynamic
 	{
 		name = "Îð¸ë";
 		speed = 8;
-		k_lim = 3;
+		k_lim = 6;
 		k_lim_1 = 10;
 		k_lim_2 = 5;
 	};

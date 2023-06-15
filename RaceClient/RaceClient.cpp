@@ -22,6 +22,7 @@
 #include "dynamic_racer_result.h"
 #include <iostream>
 #include <windows.h>
+#include <math.h>
 #include <cmath>
 
 
@@ -140,23 +141,13 @@ void ground_race(float distance)
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 2 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest())
+					else if (distance > (float)array_ground_veh[i]->Get_speed() * 2 * (float)array_ground_veh[i]->Get_time_to_rest()) 
 					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + 2 * (float)array_ground_veh[i]->Get_rest_time1();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						int k;
-						k = distance / ((float)array_ground_veh[i]->Get_speed() * (float)array_ground_veh[i]->Get_time_to_rest());
-						k = k - 1;
+						float k;
+						k =  distance / ((float)array_ground_veh[i]->Get_speed() * (float)array_ground_veh[i]->Get_time_to_rest());
+						k = floor(k);
+						k = k - 2;
+						
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + k * (float)array_ground_veh[i]->Get_rest_time1();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
@@ -213,30 +204,17 @@ void ground_race(float distance)
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
+					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest())
 					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1() +
-							(float)array_ground_veh[i]->Get_rest_time2();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 5 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1() +
-							2 * (float)array_ground_veh[i]->Get_rest_time2();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 5 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						int k;
+						float k;
 						k = distance / ((float)array_ground_veh[i]->Get_speed() * (float)array_ground_veh[i]->Get_time_to_rest());
-						k = k - 1;
+						k = floor(k);
+						k = k - 2;
+
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1()
 							+ k * (float)array_ground_veh[i]->Get_rest_time2();
 						array_ground_veh[i]->Set_race_time(total_time);
-					}
+						}
 				}
 				else {
 					std::cout << "Вы попытались зарегистрировать одно и тоже транспортное средство дважды на одно гонку, это не разрешено" << std::endl;
@@ -397,7 +375,6 @@ void air_race(float distance)
 					{
 						int k = 0;
 						k = floor((float)distance / 1000.0);
-						std::cout << " k = " << k << std::endl;
 						k = (float)array_air_veh[i]->Get_k_lim() * k;
 						personal_distance = (float)distance * (100 - k) / 100.0;
 						total_time = personal_distance / (float)array_air_veh[i]->Get_speed();
@@ -468,20 +445,18 @@ void air_race(float distance)
 					}
 					else if (distance >= 1000 && distance < 5000)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (distance - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100.0 - (float)array_air_veh[i]->Get_k_lim()) / 100.0 / (float)array_air_veh[i]->Get_speed();
+							
 						array_air_veh[i]->Set_race_time(total_time);
 					}
 					else if (distance >= 5000 && distance < 10000)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (5000 - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed() +
-							(distance - 5000) * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed();
 						array_air_veh[i]->Set_race_time(total_time);
 					}
 					else if (10000 <= distance)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (5000 - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed() +
-							(10000 - 5000) * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed() +
-							(distance - 10000) * (100 - array_air_veh[i]->Get_k_lim_2()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100 - array_air_veh[i]->Get_k_lim_2()) / 100 / array_air_veh[i]->Get_speed();
 						array_air_veh[i]->Set_race_time(total_time);
 					}
 				}
@@ -725,23 +700,13 @@ void mix_race(float distance)
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 2 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest())
+					else if (distance > (float)array_ground_veh[i]->Get_speed() * 2 * (float)array_ground_veh[i]->Get_time_to_rest())
 					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + 2 * (float)array_ground_veh[i]->Get_rest_time1();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						int k;
+						float k;
 						k = distance / ((float)array_ground_veh[i]->Get_speed() * (float)array_ground_veh[i]->Get_time_to_rest());
-						k = k - 1;
+						k = floor(k);
+						k = k - 2;
+
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + k * (float)array_ground_veh[i]->Get_rest_time1();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
@@ -827,26 +792,13 @@ void mix_race(float distance)
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1();
 						array_ground_veh[i]->Set_race_time(total_time);
 					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest())
+					else if (distance > (float)array_ground_veh[i]->Get_speed() * 3 * (float)array_ground_veh[i]->Get_time_to_rest())
 					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1() +
-							(float)array_ground_veh[i]->Get_rest_time2();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 4 * (float)array_ground_veh[i]->Get_time_to_rest() &&
-						distance <= (float)array_ground_veh[i]->Get_speed() * 5 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1() +
-							2 * (float)array_ground_veh[i]->Get_rest_time2();
-						array_ground_veh[i]->Set_race_time(total_time);
-					}
-
-					else if (distance > (float)array_ground_veh[i]->Get_speed() * 5 * (float)array_ground_veh[i]->Get_time_to_rest())
-					{
-						int k;
+						float k;
 						k = distance / ((float)array_ground_veh[i]->Get_speed() * (float)array_ground_veh[i]->Get_time_to_rest());
-						k = k - 1;
+						k = floor(k);
+						k = k - 2;
+
 						total_time = time_without_rest + (float)array_ground_veh[i]->Get_rest_time() + (float)array_ground_veh[i]->Get_rest_time1()
 							+ k * (float)array_ground_veh[i]->Get_rest_time2();
 						array_ground_veh[i]->Set_race_time(total_time);
@@ -870,6 +822,9 @@ void mix_race(float distance)
 					array_air_veh[i] = new RaceLibraryDynamic::Magic_carpet;
 					array_res[i] = new RaceLibraryDynamic::Racer_result;
 					std::cout << array_air_veh[i]->Get_name() << " успешно зарегистрирован." << std::endl;
+
+					std::cout << array_air_veh[i]->Get_name() << " успешно зарегистрирован." << std::endl;
+
 					if (distance < 1000)
 					{
 						total_time = distance / array_air_veh[i]->Get_speed();
@@ -877,22 +832,21 @@ void mix_race(float distance)
 					}
 					else if (distance >= 1000 && distance < 5000)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (distance - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100.0 - (float)array_air_veh[i]->Get_k_lim()) / 100.0 / (float)array_air_veh[i]->Get_speed();
+
 						array_air_veh[i]->Set_race_time(total_time);
 					}
 					else if (distance >= 5000 && distance < 10000)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (5000 - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed() +
-							(distance - 5000) * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed();
 						array_air_veh[i]->Set_race_time(total_time);
 					}
 					else if (10000 <= distance)
 					{
-						total_time = 1000 / array_air_veh[i]->Get_speed() + (5000 - 1000) * (100 - array_air_veh[i]->Get_k_lim()) / 100 / array_air_veh[i]->Get_speed() +
-							(10000 - 5000) * (100 - array_air_veh[i]->Get_k_lim_1()) / 100 / array_air_veh[i]->Get_speed() +
-							(distance - 10000) * (100 - array_air_veh[i]->Get_k_lim_2()) / 100 / array_air_veh[i]->Get_speed();
+						total_time = distance * (100 - array_air_veh[i]->Get_k_lim_2()) / 100 / array_air_veh[i]->Get_speed();
 						array_air_veh[i]->Set_race_time(total_time);
 					}
+
 					array_res[i]->Set_racer_name("Ковёр-самолёт");
 					array_res[i]->Set_racer_time(total_time);
 				}

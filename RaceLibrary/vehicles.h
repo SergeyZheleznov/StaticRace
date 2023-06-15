@@ -6,7 +6,7 @@ namespace RaceLibrary
 	class Vehicles {
 	public:
 		int speed = 0;
-		int race_time = 0;
+		float race_time = 0;
 		std::string name = "Транспортное средство";
 
 		Vehicles();

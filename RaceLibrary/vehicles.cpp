@@ -11,7 +11,7 @@ namespace RaceLibrary
 	}
 
 	int Vehicles::Get_speed() { return speed; };
-	float Vehicles::Get_race_time() { return race_time; };
+	float Vehicles::Get_race_time() { return static_cast<float>(race_time); };
 	std::string Vehicles::Get_name() { return name; };
-	void Vehicles::Set_race_time(float value_race_time) { race_time = value_race_time; };
+	void Vehicles::Set_race_time(float value_race_time) { race_time = static_cast<int> (value_race_time); };
 }
